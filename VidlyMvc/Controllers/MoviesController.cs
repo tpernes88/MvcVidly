@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
@@ -21,6 +22,29 @@ namespace VidlyMvc.Controllers
             _context.Dispose();
         }
 
+        public ActionResult New()
+        {
+            var genres = _context.Genres.ToList();
+
+            var viewModel = new NewMovieViewModel
+            {
+                Genres = genres
+            };
+
+            return View("MovieForm", viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult Create(Movie movie)
+        {
+            movie.DateAddedDb = DateTime.Today;
+
+            _context.Movies.Add(movie);
+            _context.SaveChanges();
+
+            return RedirectToAction("Index", "Movies");
+        }
+
         public ActionResult Index()
         {
             var movies = _context.Movies.Include(c => c.Genre).ToList();
@@ -28,7 +52,6 @@ namespace VidlyMvc.Controllers
             return View(movies);
         }
 
-        [Route("movie/details/{id}")]
         public ActionResult Details(int id)
         {
             var movies = _context.Movies.Include(c => c.Genre).ToList().SingleOrDefault(c => c.Id == id);
