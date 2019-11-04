@@ -28,6 +28,14 @@ namespace VidlyMvc.Controllers
             return View(movies);
         }
 
+        [Route("movie/details/{id}")]
+        public ActionResult Details(int id)
+        {
+            var movies = _context.Movies.Include(c => c.Genre).ToList().SingleOrDefault(c => c.Id == id);
+
+            return View(movies);
+        }
+
         public ActionResult Random()
         {
             var movie = new Movie() { Name = "Shrek" };
