@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace VidlyMvc.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
         public ActionResult Index()
